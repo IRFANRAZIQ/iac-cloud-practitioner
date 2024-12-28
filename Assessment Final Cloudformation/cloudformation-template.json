@@ -1,0 +1,84 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "Assessment Final 1",
+        "Parameters": {
+            "MyInstance": {
+                "Description": "Instance type for EC2",
+                "Type": "String",
+                "AllowedValues": ["t2.nano", "t2.micro", "t2.medium"],
+                "Default": "t2.micro"
+            }
+        },
+    
+        "Resources": {
+            "IrfanSG" : {
+              "Type" : "AWS::EC2::SecurityGroup",
+              "Properties" : {
+                "GroupDescription" : "Allow SSH and HTTP traffic",
+                "SecurityGroupIngress" : [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": 22,
+                        "ToPort": 22,
+                        "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": 80,
+                        "ToPort": 80,
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ]
+              }
+            },
+            
+            "IrfanEC2InstancePertama": {
+                "Type": "AWS::EC2::Instance",
+                "Properties": {
+                    "ImageId": "ami-06650ca7ed78ff6fa",
+                    "InstanceType": {
+                        "Ref": "MyInstance"
+                    },
+                    "KeyName": "Irfan",
+                    "SecurityGroups": [
+                        {
+                            "Ref": "IrfanSG"
+                        }
+                    ],
+                    "Tags": [
+                        {
+                            "Key": "Name",
+                            "Value": "EC2-Instance"
+                        }
+                    ],
+                    "UserData": {
+                        "Fn::Base64": {
+                            "Fn::Sub": "#!/bin/bash\nsudo apt update -y\nsudo apt upgrade -y\nsudo apt install -y lamp-server^"
+                        }
+                    }
+                }
+            },
+
+            "IrfanEC2InstanceKedua": {
+                "Type": "AWS::EC2::Instance",
+                "Properties": {
+                    "ImageId": "ami-06650ca7ed78ff6fa",
+                    "InstanceType": {
+                        "Ref": "MyInstance"
+                    },
+                    "KeyName": "Irfan",
+                    "SecurityGroups": [
+                        {
+                            "Ref": "IrfanSG"
+                        }
+                    ],
+                    "Tags": [
+                        {
+                            "Key": "Name",
+                            "Value": "EC2-Instance"
+                        }
+                    ]
+                }
+            }
+        }
+    }
